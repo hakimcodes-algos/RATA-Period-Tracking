@@ -1,5 +1,5 @@
 /* global dates, helpers */
-'use strict';
+"use strict";
 
 (function (window) {
   const Calendar = function () {
@@ -17,44 +17,44 @@
 
       const selectedMonthYear = dates.newDate(
         `${selectedYearN}-${selectedMonthN}`,
-        'YYYY-M'
+        "YYYY-M"
       );
-      const title = selectedMonthYear.formatDate('MMMM YYYY');
+      const title = selectedMonthYear.formatDate("MMMM YYYY");
 
       // previous and next month data for nav links
-      const nextMonth = selectedMonthYear.cloneDate().addDate(1, 'months');
-      const prevMonth = selectedMonthYear.cloneDate().addDate(-1, 'months');
+      const nextMonth = selectedMonthYear.cloneDate().addDate(1, "months");
+      const prevMonth = selectedMonthYear.cloneDate().addDate(-1, "months");
       const nextMonthObj = {
-        monthN: nextMonth.getDate('month'),
-        yearN: nextMonth.getDate('year'),
-        title: nextMonth.formatDate('MMMM YYYY'),
+        monthN: nextMonth.getDate("month"),
+        yearN: nextMonth.getDate("year"),
+        title: nextMonth.formatDate("MMMM YYYY"),
       };
       const prevMonthObj = {
         daysInMonth: prevMonth.daysInMonthDate(),
-        monthN: prevMonth.getDate('month'),
-        yearN: prevMonth.getDate('year'),
-        title: prevMonth.formatDate('MMMM YYYY'),
+        monthN: prevMonth.getDate("month"),
+        yearN: prevMonth.getDate("year"),
+        title: prevMonth.formatDate("MMMM YYYY"),
       };
 
       // previous and next year data for nav links
-      const nextYear = selectedMonthYear.cloneDate().addDate(1, 'years');
-      const prevYear = selectedMonthYear.cloneDate().addDate(-1, 'years');
+      const nextYear = selectedMonthYear.cloneDate().addDate(1, "years");
+      const prevYear = selectedMonthYear.cloneDate().addDate(-1, "years");
       const nextYearObj = {
-        monthN: nextYear.getDate('month'),
-        yearN: nextYear.getDate('year'),
-        title: nextYear.formatDate('MMMM YYYY'),
+        monthN: nextYear.getDate("month"),
+        yearN: nextYear.getDate("year"),
+        title: nextYear.formatDate("MMMM YYYY"),
       };
       const prevYearObj = {
-        monthN: prevYear.getDate('month'),
-        yearN: prevYear.getDate('year'),
-        title: prevYear.formatDate('MMMM YYYY'),
+        monthN: prevYear.getDate("month"),
+        yearN: prevYear.getDate("year"),
+        title: prevYear.formatDate("MMMM YYYY"),
       };
 
       // current month and year data for today link
       const todayObj = {
-        monthN: helpers.today.getDate('month'),
-        yearN: helpers.today.getDate('year'),
-        title: helpers.today.formatDate('MMMM YYYY'),
+        monthN: helpers.today.getDate("month"),
+        yearN: helpers.today.getDate("year"),
+        title: helpers.today.formatDate("MMMM YYYY"),
       };
 
       return {
@@ -86,15 +86,15 @@
 
       const thisMonth = dates.newDate(
         `${selectedYearN}-${selectedMonthN}`,
-        'YYYY-M'
+        "YYYY-M"
       );
-      const weekdayFirstDayThisMonth = thisMonth.getDate('day');
+      const weekdayFirstDayThisMonth = thisMonth.getDate("day");
       const daysInThisMonth = thisMonth.daysInMonthDate();
       const lastDayThisMonth = dates.newDate(
-        selectedYearN + '-' + selectedMonthN + '-' + daysInThisMonth,
-        'YYYY-M-D'
+        selectedYearN + "-" + selectedMonthN + "-" + daysInThisMonth,
+        "YYYY-M-D"
       );
-      const weekdayLastDayThisMonth = lastDayThisMonth.getDate('day');
+      const weekdayLastDayThisMonth = lastDayThisMonth.getDate("day");
 
       // before
       let diffStart = weekdayFirstDayThisMonth - startDayOfWeek;
@@ -106,13 +106,14 @@
         days.push({
           date:
             prevMonthObj.yearN +
-            '-' +
+            "-" +
             helpers.z(prevMonthObj.monthN) +
-            '-' +
+            "-" +
             helpers.z(i),
           n: i,
-          c: '',
-          k: ['calendar__day--another-month'],
+          c: "",
+          k: ["calendar__day--another-month"],
+          ariaLabel: "Period day",
         });
       }
       // during
@@ -120,12 +121,12 @@
         days.push({
           date:
             selectedYearN +
-            '-' +
+            "-" +
             helpers.z(selectedMonthN) +
-            '-' +
+            "-" +
             helpers.z(i),
           n: i,
-          c: '',
+          c: "",
           k: [],
         });
       }
@@ -138,13 +139,14 @@
         days.push({
           date:
             nextMonthObj.yearN +
-            '-' +
+            "-" +
             helpers.z(nextMonthObj.monthN) +
-            '-' +
+            "-" +
             helpers.z(i),
           n: i,
-          c: '',
-          k: ['calendar__day--another-month'],
+          c: "",
+          k: ["calendar__day--another-month"],
+          ariaLabel: "Period day",
         });
       }
 
@@ -189,19 +191,19 @@
         if (!ceiling && data.quicklist.length) {
           var lastEventDate = dates.newDate(sliceOfDates[0]);
           var daysLastSinceLastEvent =
-            lastDayDate.diffDate(lastEventDate, 'days') + 1;
+            lastDayDate.diffDate(lastEventDate, "days") + 1;
           if (daysLastSinceLastEvent > data.average) {
             var daysFirstSinceLastEvent =
-              firstDayDate.diffDate(lastEventDate, 'days') + 1;
+              firstDayDate.diffDate(lastEventDate, "days") + 1;
             var daysFirstDiff = daysFirstSinceLastEvent % data.average;
             var n = firstDayDate
               .cloneDate()
-              .subtractDate(daysFirstDiff - 1, 'days');
+              .subtractDate(daysFirstDiff - 1, "days");
             sliceOfDates = [n.formatDate(helpers.datePattern)];
             var daysEndDiff = daysFirstDiff + days.length;
             var quotient = Math.floor(daysEndDiff / data.average);
             for (var q = 0; q <= quotient; q++) {
-              n.addDate(data.average, 'days');
+              n.addDate(data.average, "days");
               sliceOfDates.unshift(n.formatDate(helpers.datePattern));
             }
           }
@@ -210,7 +212,7 @@
         var firstEventDate = dates.newDate(
           sliceOfDates[sliceOfDates.length - 1]
         );
-        var counter = firstDayDate.diffDate(firstEventDate, 'days') + 1;
+        var counter = firstDayDate.diffDate(firstEventDate, "days") + 1;
         var actual = false;
 
         var todayStr = helpers.todayStr;
@@ -226,23 +228,23 @@
             counter++;
           }
           if (item.date === todayStr) {
-            item.k.push('calendar__day--today');
+            item.k.push("calendar__day--today");
           } else if (item.date > todayStr) {
-            item.k.push('calendar__day--future');
+            item.k.push("calendar__day--future");
           }
           if (item.c === 1) {
             if (data.quicklist.indexOf(item.date) !== -1) {
               actual = true;
-              item.k.push('calendar__day--selected');
+              item.k.push("calendar__day--selected");
             } else {
               actual = false;
-              item.k.push('calendar__day--selected-future');
+              item.k.push("calendar__day--selected-future");
             }
           } else if (item.c > 1 && item.c <= periodLength) {
             if (actual) {
-              item.k.push('calendar__day--selected');
+              item.k.push("calendar__day--selected");
             } else {
-              item.k.push('calendar__day--selected-future');
+              item.k.push("calendar__day--selected-future");
             }
           } else {
             actual = false;
