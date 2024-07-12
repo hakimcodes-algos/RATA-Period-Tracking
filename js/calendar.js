@@ -103,30 +103,31 @@
       }
       diffStart = prevMonthObj.daysInMonth - diffStart + 1;
       for (let i = diffStart; i <= prevMonthObj.daysInMonth; i++) {
-        const dateStr =
-          prevMonthObj.yearN +
-          "-" +
-          helpers.z(prevMonthObj.monthN) +
-          "-" +
-          helpers.z(i);
         days.push({
-          date: dateStr,
+          date:
+            prevMonthObj.yearN +
+            "-" +
+            helpers.z(prevMonthObj.monthN) +
+            "-" +
+            helpers.z(i),
           n: i,
           c: "",
           k: ["calendar__day--another-month"],
-          ariaLabel: dates.newDate(dateStr).formatDate("MMMM D, YYYY"),
+          ariaLabel: "Period day",
         });
       }
       // during
       for (let i = 1; i <= daysInThisMonth; i++) {
-        const dateStr =
-          selectedYearN + "-" + helpers.z(selectedMonthN) + "-" + helpers.z(i);
         days.push({
-          date: dateStr,
+          date:
+            selectedYearN +
+            "-" +
+            helpers.z(selectedMonthN) +
+            "-" +
+            helpers.z(i),
           n: i,
           c: "",
           k: [],
-          ariaLabel: dates.newDate(dateStr).formatDate("MMMM D, YYYY"),
         });
       }
       // after
@@ -135,18 +136,17 @@
         diffEnd = 7 + diffEnd;
       }
       for (let i = 1; i <= diffEnd; i++) {
-        const dateStr =
-          nextMonthObj.yearN +
-          "-" +
-          helpers.z(nextMonthObj.monthN) +
-          "-" +
-          helpers.z(i);
         days.push({
-          date: dateStr,
+          date:
+            nextMonthObj.yearN +
+            "-" +
+            helpers.z(nextMonthObj.monthN) +
+            "-" +
+            helpers.z(i),
           n: i,
           c: "",
           k: ["calendar__day--another-month"],
-          ariaLabel: dates.newDate(dateStr).formatDate("MMMM D, YYYY"),
+          ariaLabel: "Period day",
         });
       }
 
@@ -162,6 +162,7 @@
     ) {
       var calendarData = function (data, periodLength, days) {
         // maximum date that is less than or equal the first day of the visible month
+        // TODO what is this?
         var floor;
         var firstDay = days[0].date;
         var firstDayDate = dates.newDate(firstDay);
@@ -215,13 +216,12 @@
         var actual = false;
 
         var todayStr = helpers.todayStr;
-        var fertilizationStart = 11;
-        var fertilizationEnd = 17;
         days.forEach(function (item) {
           if (sliceOfDates.indexOf(item.date) !== -1) {
             counter = 1;
           }
           if (counter) {
+            // TODO check this if
             if (counter > 0) {
               item.c = counter;
             }
@@ -236,44 +236,78 @@
             if (data.quicklist.indexOf(item.date) !== -1) {
               actual = true;
               item.k.push("calendar__day--selected");
-              item.ariaLabel += `, Period Day ${item.c}`;
             } else {
               actual = false;
               item.k.push("calendar__day--selected-future");
-              item.ariaLabel += `, Period Day ${item.c} (Next Month)`;
             }
-          } else if (
-            item.c >= fertilizationStart &&
-            item.c <= fertilizationEnd
-          ) {
-            item.k.push("calendar__day--fertilization");
-            item.ariaLabel += `, Possible Day for Fertilization`;
+          } else if (item.c > 1 && item.c <= periodLength) {
+            if (actual) {
+              item.k.push("calendar__day--selected");
+            } else {
+              item.k.push("calendar__day--selected-future");
+            }
+          } else {
+            actual = false;
           }
         });
 
         return days;
       };
 
-      const chromeData = this._calendarChrome(
+      /**
+       * @param {object} data
+       * @param {number} startDayOfWeek - 0 Sunday, 1 Monday, 6 Saturday
+       * @param {number} periodLength - Length of period
+       * @param {number} selectedMonthN - Selected month number
+       * @param {number} selectedYearN - Selected year number
+       */
+      var calendarGet = (
+        data,
         startDayOfWeek,
+        periodLength,
+        selectedMonthN,
+        selectedYearN
+      ) => {
+        // TODO clean variable names
+        const giulia = this._calendarChrome(
+          startDayOfWeek,
+          selectedMonthN,
+          selectedYearN
+        );
+
+        let days = this._calendarDays(
+          startDayOfWeek,
+          selectedMonthN,
+          selectedYearN,
+          giulia.prevMonthObj,
+          giulia.nextMonthObj
+        );
+
+        days = calendarData(data, periodLength, days);
+
+        var res = {
+          days: days,
+          week: giulia.weekTitle,
+          title: giulia.title,
+          next: giulia.nextMonthObj,
+          prev: giulia.prevMonthObj,
+          nextYear: giulia.nextYearObj,
+          prevYear: giulia.prevYearObj,
+          current: giulia.todayObj,
+        };
+
+        return res;
+      };
+
+      return calendarGet(
+        data,
+        startDayOfWeek,
+        periodLength,
         selectedMonthN,
         selectedYearN
       );
-      const daysData = this._calendarDays(
-        startDayOfWeek,
-        selectedMonthN,
-        selectedYearN,
-        chromeData.prevMonthObj,
-        chromeData.nextMonthObj
-      );
-      const calendarDays = calendarData(data, periodLength, daysData);
-
-      return {
-        chromeData,
-        calendarDays,
-      };
     };
   };
 
-  window.Calendar = Calendar;
+  window.calendar = new Calendar();
 })(window);
